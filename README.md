@@ -11,7 +11,7 @@ A robust, 3-tier .NET application developed as a technical assessment. The syste
 
 ## Setup Instructions
 1. Clone the repository: `git clone https://github.com/VolodymyrSribnyi/EleksTestTask`
-2. Open the solution in Visual Studio 2022.
+2. Open the solution in Visual Studio.
 3. Set **WebApi** as the startup project and run `Update-Database` in the Package Manager Console to apply EF Core migrations.
 4. Set the solution to **Multiple Startup Projects** (Start both `WebApi` and `WinFormsClient`).
 5. Use the following test credentials to log in:
