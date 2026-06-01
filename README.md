@@ -3,7 +3,7 @@
 A robust, 3-tier .NET application developed as a technical assessment. The system consists of a RESTful Web API, a SQL Server database, and a Windows Forms desktop client, strictly adhering to the Separation of Concerns principle.
 
 ## Tech Stack
-* **API:** ASP.NET Core 8 Web API
+* **API:** ASP.NET Core 10 Web API
 * **Database:** MS SQL Server, Entity Framework Core (Code-First)
 * **Desktop Client:** Windows Forms, .NET Generic Host
 * **Security:** JWT Authentication, Cryptographic Password Hashing
