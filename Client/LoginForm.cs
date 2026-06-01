@@ -19,12 +19,6 @@ namespace Client
             presenter.AttachView(this);
 
             txtPassword.UseSystemPasswordChar = true;
-            btnLogin.Click += (sender, args) => LoginClicked?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void LoginForm_Load(object sender, EventArgs e)
-        {
-
         }
         public string Login => txtLogin.Text.Trim();
 
@@ -44,7 +38,7 @@ namespace Client
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-
+            LoginClicked?.Invoke(this, EventArgs.Empty);
         }
     }
 }

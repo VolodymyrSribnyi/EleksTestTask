@@ -1,4 +1,5 @@
-﻿using Client.DTOs;
+﻿using Client.Core;
+using Client.DTOs;
 using Client.Views;
 
 namespace Client.Presenters
@@ -7,10 +8,12 @@ namespace Client.Presenters
     {
         private ILoginView _view;
         private readonly ApiService _apiService;
+        private readonly IUserSession _userSession;
 
-        public LoginPresenter(ApiService apiService)
+        public LoginPresenter(ApiService apiService,IUserSession userSession)
         {
             _apiService = apiService;
+            _userSession = userSession;
         }
         public void AttachView(ILoginView view)
         {
@@ -23,7 +26,14 @@ namespace Client.Presenters
             {
                 var dto = new UserDto { Login = _view.Login, Password = _view.Password };
                 string token = await _apiService.LoginAsync(dto);
-                Program.JwtToken = token;
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    _view.ShowError("The server did not return a token. Please try again.");
+                    return;
+                }
+
+                _userSession.Token = token;
 
                 _view.CloseWithSuccess();
             }

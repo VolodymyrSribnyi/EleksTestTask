@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Text;
+using WebApi.Infrastructure;
 
 namespace WebApi
 {
@@ -36,11 +37,13 @@ namespace WebApi
                 };
             });
             builder.Services.AddControllers();
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddProblemDetails();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
             builder.Services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hotel Management System API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Students API", Version = "v1" });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -70,7 +73,7 @@ namespace WebApi
             app.UseAuthentication();
             app.UseAuthorization();
 
-
+            app.UseExceptionHandler();
             app.MapControllers();
 
             using (var scope = app.Services.CreateScope())

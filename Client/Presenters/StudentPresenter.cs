@@ -37,7 +37,7 @@ namespace Client.Presenters
         {
             try
             {
-                var dto = new StudentDto
+                var dto = new StudentCreateUpdateDto
                 {
                     StudentFirstName = _view.StudentFirstName,
                     StudentLastName = _view.StudentLastName
@@ -58,7 +58,7 @@ namespace Client.Presenters
 
             try
             {
-                var dto = new StudentDto
+                var dto = new StudentCreateUpdateDto
                 {
                     StudentFirstName = _view.StudentFirstName,
                     StudentLastName = _view.StudentLastName

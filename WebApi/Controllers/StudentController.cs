@@ -1,12 +1,15 @@
 ﻿using Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApi.DTOs;
+using WebApi.Infrastructure;
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class StudentController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -42,7 +45,7 @@ namespace WebApi.Controllers
                 .FirstOrDefaultAsync(s => s.Id == id);
 
             if (student == null)
-                return NotFound();
+                throw new NotFoundException($"Student with id {id} not found");
 
             var dto = new StudentDto
             {
@@ -66,7 +69,7 @@ namespace WebApi.Controllers
             await _context.Students.AddAsync(student);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetById), new { id = student.Id }, student);
+            return CreatedAtAction(nameof(GetById), new { id = student.Id }, dto);
         }
 
         // PUT: api/student/{id}
@@ -76,7 +79,7 @@ namespace WebApi.Controllers
             var student = await _context.Students.FindAsync(id);
 
             if (student == null)
-                return NotFound();
+                throw new NotFoundException($"Student with id {id} not found");
 
             student.StudentFirstName = dto.StudentFirstName;
             student.StudentLastName = dto.StudentLastName;
@@ -93,7 +96,7 @@ namespace WebApi.Controllers
             var student = await _context.Students.FindAsync(id);
 
             if (student == null)
-                return NotFound();
+                throw new NotFoundException($"Student with id {id} not found");
 
             _context.Students.Remove(student);
             await _context.SaveChangesAsync();

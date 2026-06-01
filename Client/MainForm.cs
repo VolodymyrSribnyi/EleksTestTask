@@ -26,8 +26,7 @@ namespace Client
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-
-            LoadDataRequested.Invoke(this, EventArgs.Empty);
+            LoadDataRequested?.Invoke(this, EventArgs.Empty);
         }
 
 
