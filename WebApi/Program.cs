@@ -1,6 +1,7 @@
 
 using Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -36,6 +37,7 @@ namespace WebApi
                     IssuerSigningKey = new SymmetricSecurityKey(secretKey)
                 };
             });
+            builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             builder.Services.AddControllers();
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddProblemDetails();
@@ -67,13 +69,11 @@ namespace WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseExceptionHandler();
             app.UseHttpsRedirection();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseExceptionHandler();
             app.MapControllers();
 
             using (var scope = app.Services.CreateScope())

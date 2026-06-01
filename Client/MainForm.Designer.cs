@@ -43,7 +43,7 @@
             dgvStudents.Location = new Point(235, 191);
             dgvStudents.Name = "dgvStudents";
             dgvStudents.RowHeadersWidth = 51;
-            dgvStudents.Size = new Size(300, 188);
+            dgvStudents.Size = new Size(363, 188);
             dgvStudents.TabIndex = 0;
             // 
             // txtLastName

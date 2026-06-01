@@ -6,7 +6,7 @@ namespace Client.DTOs
 {
     public record StudentCreateUpdateDto
     {
-        public string StudentFirstName { get; set; } = string.Empty;
-        public string StudentLastName { get; set; } = string.Empty;
+        public required string StudentFirstName { get; set; }
+        public required string StudentLastName { get; set; }
     }
 }

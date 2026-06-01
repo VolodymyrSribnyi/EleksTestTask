@@ -69,7 +69,15 @@ namespace WebApi.Controllers
             await _context.Students.AddAsync(student);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetById), new { id = student.Id }, dto);
+            var createdStudentDto = new StudentDto
+            {
+                Id = student.Id,
+                StudentFirstName = student.StudentFirstName,
+                StudentLastName = student.StudentLastName
+            };
+
+            // 4. Повертаємо 201 Created з повним DTO
+            return CreatedAtAction(nameof(GetById), new { id = student.Id }, createdStudentDto);
         }
 
         // PUT: api/student/{id}

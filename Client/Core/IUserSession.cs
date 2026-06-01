@@ -6,7 +6,7 @@ namespace Client.Core
 {
     public interface IUserSession
     {
-        string Token { get; set; }
+        string? Token { get; set; }
         bool IsAuthenticated { get; }
     }
 }

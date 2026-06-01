@@ -16,29 +16,28 @@ namespace WebApi.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IPasswordHasher<User> _passwordHasher;
 
-        public AuthController(AppDbContext context, IConfiguration configuration)
+        public AuthController(AppDbContext context, IConfiguration configuration, IPasswordHasher<User> passwordHasher)
         {
             _context = context;
             _configuration = configuration;
+            _passwordHasher = passwordHasher;
         }
 
         [HttpPost("/token")]
         public async Task<IActionResult> Login([FromBody] UserDto request)
         {
-            // 1. Шукаємо користувача в БД (асинхронно)
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.UserLogin == request.Login);
-            if (user == null)
-                return Unauthorized(); // Повертаємо 401 без уточнення, що саме невірно
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserLogin == request.Login);
 
-            // 2. Перевіряємо хеш пароля
-            var hasher = new PasswordHasher<User>();
-            var result = hasher.VerifyHashedPassword(user, user.UserPassword, request.Password);
+            if (user == null)
+                return Unauthorized();
+
+            var result = _passwordHasher.VerifyHashedPassword(user, user.UserPassword, request.Password);
 
             if (result != PasswordVerificationResult.Success)
                 return Unauthorized();
 
-            // 3. Генеруємо JWT
             var jwtSettings = _configuration.GetSection("JwtSettings");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Secret"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -47,7 +46,7 @@ namespace WebApi.Controllers
                 issuer: jwtSettings["Issuer"],
                 audience: jwtSettings["Audience"],
                 claims: new[] { new Claim(ClaimTypes.NameIdentifier, user.UserLogin) },
-                expires: DateTime.UtcNow.AddMinutes(15), // Короткий час життя токена для безпеки
+                expires: DateTime.UtcNow.AddMinutes(15),
                 signingCredentials: creds
             );
 

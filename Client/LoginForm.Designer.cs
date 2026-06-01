@@ -68,7 +68,6 @@ namespace Client
             Controls.Add(txtLogin);
             Name = "LoginForm";
             Text = "LoginForm";
-            Load += LoginForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }

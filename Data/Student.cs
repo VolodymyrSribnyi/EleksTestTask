@@ -7,7 +7,7 @@ namespace Data
     public class Student
     {
         public Guid Id { get; set; }
-        public string StudentFirstName { get; set; } 
-        public string StudentLastName { get; set; }
+        public required string StudentFirstName { get; set; } 
+        public required string StudentLastName { get; set; }
     }
 }

@@ -18,6 +18,9 @@ namespace Data
             modelBuilder.Entity<User>().ToTable("Users");
             modelBuilder.Entity<Student>().ToTable("Students");
 
+            modelBuilder.Entity<User>()
+            .HasIndex(u => u.UserLogin)
+            .IsUnique();
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Student> Students { get; set; }
