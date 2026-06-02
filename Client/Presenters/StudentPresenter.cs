@@ -28,6 +28,13 @@ namespace Client.Presenters
 
                 _view.DisplayStudents(students);
             }
+            catch (UnauthorizedAccessException ex)
+            {
+                _view.ShowError(ex.Message);
+
+                Application.Restart();
+                Environment.Exit(0);
+            }
             catch (Exception ex)
             {
                 _view.ShowError($"Error loading students: {ex.Message}");
@@ -35,7 +42,7 @@ namespace Client.Presenters
         }
         private async void OnAddStudentClicked(object sender, EventArgs e)
         {
-            try
+            await ExecuteSafeAsync(async () =>
             {
                 var dto = new StudentCreateUpdateDto
                 {
@@ -46,17 +53,14 @@ namespace Client.Presenters
                 await _apiService.CreateStudentAsync(dto);
                 _view.ClearInputs();
                 await ReloadStudentsAsync();
-            }
-            catch (Exception ex)
-            {
-                _view.ShowError(ex.Message);
-            }
+            });
         }
+
         private async void OnEditStudentClicked(object sender, EventArgs e)
         {
             if (_view.SelectedStudentId == null) return;
 
-            try
+            await ExecuteSafeAsync(async () =>
             {
                 var dto = new StudentCreateUpdateDto
                 {
@@ -67,33 +71,40 @@ namespace Client.Presenters
                 await _apiService.UpdateStudentAsync(_view.SelectedStudentId.Value, dto);
                 _view.ClearInputs();
                 await ReloadStudentsAsync();
-            }
-            catch (Exception ex)
-            {
-                _view.ShowError(ex.Message);
-            }
+            });
         }
         private async void OnDeleteStudentClicked(object sender, EventArgs e)
         {
             if (_view.SelectedStudentId == null) return;
 
-            try
+            await ExecuteSafeAsync(async () =>
             {
                 await _apiService.DeleteStudentAsync(_view.SelectedStudentId.Value);
                 _view.ClearInputs();
                 await ReloadStudentsAsync();
-            }
-            catch (Exception ex)
-            {
-                _view.ShowError(ex.Message);
-            }
+            });
         }
-
         private async Task ReloadStudentsAsync()
         {
             var students = await _apiService.GetStudentsAsync();
             _view.DisplayStudents(students);
         }
-
+        private async Task ExecuteSafeAsync(Func<Task> action)
+        {
+            try
+            {
+                await action();
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _view.ShowError(ex.Message);
+                Application.Restart();
+                Environment.Exit(0);
+            }
+            catch (Exception ex)
+            {
+                _view.ShowError($"Error: {ex.Message}");
+            }
+        }
     }
 }
